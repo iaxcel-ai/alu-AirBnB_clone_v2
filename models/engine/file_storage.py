@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-"""This module defines FileStorage - stores objects as JSON on disk."""
+"""This module defines FileStorage - stores objects as JSON on disk.
+
+FileStorage is the default storage engine used when HBNB_TYPE_STORAGE
+is not set to 'db'. All data is kept in a local file.json file.
+"""
 import json
 
 
