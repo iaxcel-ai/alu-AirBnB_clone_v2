@@ -1,34 +1,54 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+"""Unit tests for the User class"""
+import os
+import unittest
 from models.user import User
+from models.base_model import BaseModel
 
 
-class test_User(test_basemodel):
-    """ """
+class TestUser(unittest.TestCase):
+    """Tests for the User class"""
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "User"
-        self.value = User
+    def test_is_subclass(self):
+        """User inherits from BaseModel"""
+        u = User()
+        self.assertIsInstance(u, BaseModel)
 
-    def test_first_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.first_name), str)
+    def test_instantiation(self):
+        """User can be instantiated"""
+        u = User()
+        self.assertIsNotNone(u.id)
 
-    def test_last_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.last_name), str)
+    def test_to_dict_no_sa_state(self):
+        """to_dict does not contain _sa_instance_state"""
+        u = User()
+        d = u.to_dict()
+        self.assertNotIn('_sa_instance_state', d)
+        self.assertEqual(d['__class__'], 'User')
 
-    def test_email(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.email), str)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage attribute test only'
+    )
+    def test_class_attributes(self):
+        """email, password, first_name, last_name are class attributes"""
+        self.assertIn('email', User.__dict__)
+        self.assertIn('password', User.__dict__)
+        self.assertIn('first_name', User.__dict__)
+        self.assertIn('last_name', User.__dict__)
 
-    def test_password(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.password), str)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage tests only'
+    )
+    def test_save_and_retrieve(self):
+        """save() persists user to storage"""
+        from models import storage
+        u = User()
+        u.email = 'test@test.com'
+        u.password = 'pass'
+        u.save()
+        key = 'User.{}'.format(u.id)
+        self.assertIn(key, storage.all())
+        storage.delete(u)
+        storage.save()

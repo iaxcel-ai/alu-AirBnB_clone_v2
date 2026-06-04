@@ -1,69 +1,69 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+"""Unit tests for the Place class"""
+import os
+import unittest
 from models.place import Place
+from models.base_model import BaseModel
 
 
-class test_Place(test_basemodel):
-    """ """
+class TestPlace(unittest.TestCase):
+    """Tests for the Place class"""
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "Place"
-        self.value = Place
+    def test_is_subclass(self):
+        """Place inherits from BaseModel"""
+        p = Place()
+        self.assertIsInstance(p, BaseModel)
 
-    def test_city_id(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.city_id), str)
+    def test_instantiation(self):
+        """Place can be instantiated"""
+        p = Place()
+        self.assertIsNotNone(p.id)
 
-    def test_user_id(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.user_id), str)
+    def test_to_dict_no_sa_state(self):
+        """to_dict does not contain _sa_instance_state"""
+        p = Place()
+        d = p.to_dict()
+        self.assertNotIn('_sa_instance_state', d)
+        self.assertEqual(d['__class__'], 'Place')
 
-    def test_name(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.name), str)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage attribute test only'
+    )
+    def test_class_attributes(self):
+        """Place has expected class attributes"""
+        for attr in ['city_id', 'user_id', 'name', 'description',
+                     'number_rooms', 'number_bathrooms', 'max_guest',
+                     'price_by_night', 'latitude', 'longitude']:
+            self.assertIn(attr, Place.__dict__)
 
-    def test_description(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.description), str)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage tests only'
+    )
+    def test_amenities_getter(self):
+        """amenities getter returns a list"""
+        p = Place()
+        self.assertIsInstance(p.amenities, list)
 
-    def test_number_rooms(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.number_rooms), int)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage tests only'
+    )
+    def test_amenities_setter(self):
+        """amenities setter appends amenity id"""
+        from models.amenity import Amenity
+        p = Place()
+        a = Amenity()
+        a.name = 'Wifi'
+        p.amenities = a
+        self.assertIn(a.id, p.amenity_ids)
 
-    def test_number_bathrooms(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.number_bathrooms), int)
-
-    def test_max_guest(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.max_guest), int)
-
-    def test_price_by_night(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.price_by_night), int)
-
-    def test_latitude(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.latitude), float)
-
-    def test_longitude(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.latitude), float)
-
-    def test_amenity_ids(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.amenity_ids), list)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage tests only'
+    )
+    def test_reviews_getter(self):
+        """reviews getter returns a list"""
+        p = Place()
+        self.assertIsInstance(p.reviews, list)

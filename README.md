@@ -1,4 +1,12 @@
-<center> <h1>HBNB - The Console</h1> </center>
+<center> <h1>AirBnB Clone v2 - MySQL</h1> </center>
+
+**Author:** Ishimwe Axcel
+
+This project extends the AirBnB clone to support MySQL database storage via SQLAlchemy ORM, alongside the original file-based JSON storage. Both engines are interchangeable via environment variables.
+
+---
+
+<center> <h2>Original Project</h2> </center>
 
 This repository contains the initial stage of a student project to build a clone of the AirBnB website. This stage implements a backend interface, or console, to manage program data. Console commands allow the user to create, update, and destroy objects, as well as manage file storage. Using a system of JSON serialization/deserialization, storage is persistent between sessions.
 

@@ -1,29 +1,37 @@
 #!/usr/bin/python3
-""" """
-from tests.test_models.test_base_model import test_basemodel
+"""Unit tests for the Review class"""
+import os
+import unittest
 from models.review import Review
+from models.base_model import BaseModel
 
 
-class test_review(test_basemodel):
-    """ """
+class TestReview(unittest.TestCase):
+    """Tests for the Review class"""
 
-    def __init__(self, *args, **kwargs):
-        """ """
-        super().__init__(*args, **kwargs)
-        self.name = "Review"
-        self.value = Review
+    def test_is_subclass(self):
+        """Review inherits from BaseModel"""
+        r = Review()
+        self.assertIsInstance(r, BaseModel)
 
-    def test_place_id(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.place_id), str)
+    def test_instantiation(self):
+        """Review can be instantiated"""
+        r = Review()
+        self.assertIsNotNone(r.id)
 
-    def test_user_id(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.user_id), str)
+    def test_to_dict_no_sa_state(self):
+        """to_dict does not contain _sa_instance_state"""
+        r = Review()
+        d = r.to_dict()
+        self.assertNotIn('_sa_instance_state', d)
+        self.assertEqual(d['__class__'], 'Review')
 
-    def test_text(self):
-        """ """
-        new = self.value()
-        self.assertEqual(type(new.text), str)
+    @unittest.skipIf(
+        os.getenv('HBNB_TYPE_STORAGE') == 'db',
+        'FileStorage attribute test only'
+    )
+    def test_class_attributes(self):
+        """place_id, user_id, text are class attributes"""
+        self.assertIn('place_id', Review.__dict__)
+        self.assertIn('user_id', Review.__dict__)
+        self.assertIn('text', Review.__dict__)
