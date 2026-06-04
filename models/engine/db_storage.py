@@ -1,5 +1,9 @@
 #!/usr/bin/python3
-"""This module defines DBStorage - stores objects in a MySQL database."""
+"""This module defines DBStorage - stores objects in a MySQL database.
+
+DBStorage is activated when HBNB_TYPE_STORAGE=db. It uses SQLAlchemy
+to manage a MySQL session and persist all model objects to the database.
+"""
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
