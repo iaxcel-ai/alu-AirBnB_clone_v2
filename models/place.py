@@ -1,5 +1,10 @@
 #!/usr/bin/python3
-"""This module defines the Place class."""
+"""This module defines the Place class.
+
+Place represents a rental property listing. It supports both
+FileStorage (with property accessors) and DBStorage (with SQLAlchemy
+relationships), including a Many-to-Many link with Amenity.
+"""
 import os
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
