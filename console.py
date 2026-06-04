@@ -1,5 +1,10 @@
 #!/usr/bin/python3
-"""Console Module"""
+"""Console Module
+
+Entry point for the AirBnB clone command interpreter.
+Supports both FileStorage and DBStorage via HBNB_TYPE_STORAGE.
+Usage: ./console.py
+"""
 import cmd
 import sys
 import re
