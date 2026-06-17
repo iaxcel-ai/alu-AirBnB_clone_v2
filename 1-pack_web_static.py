@@ -6,16 +6,16 @@ import os
 
 
 def do_pack():
-    """Generate a .tgz archive from the contents of web_static."""
-    now = datetime.now()
-    file_name = "versions/web_static_{}{}{}{}{}{}.tgz".format(
-        now.year, now.month, now.day, now.hour, now.minute, now.second)
+    """Generate a .tgz archive from the contents of web_static.
 
-    if not os.path.exists("versions"):
+    Returns:
+        str: path of the archive if successful, None otherwise.
+    """
+    try:
+        now = datetime.now().strftime("%Y%m%d%H%M%S")
         local("mkdir -p versions")
-
-    result = local("tar -cvzf {} web_static".format(file_name))
-
-    if result.failed:
+        archive_path = "versions/web_static_{}.tgz".format(now)
+        local("tar -cvzf {} web_static".format(archive_path))
+        return archive_path
+    except Exception:
         return None
-    return file_name
